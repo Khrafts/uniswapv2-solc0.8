@@ -190,7 +190,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         uint256 amount1Out,
         address to,
         bytes calldata data
-    ) external override lock {
+    ) external virtual override lock {
         require(
             amount0Out > 0 || amount1Out > 0,
             "UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT"

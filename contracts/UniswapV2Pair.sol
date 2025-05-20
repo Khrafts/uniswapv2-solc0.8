@@ -19,9 +19,9 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     address public override token0;
     address public override token1;
 
-    uint112 private reserve0; // uses single storage slot, accessible via getReserves
-    uint112 private reserve1; // uses single storage slot, accessible via getReserves
-    uint32 private blockTimestampLast; // uses single storage slot, accessible via getReserves
+    uint112 internal reserve0; // uses single storage slot, accessible via getReserves
+    uint112 internal reserve1; // uses single storage slot, accessible via getReserves
+    uint32 internal blockTimestampLast; // uses single storage slot, accessible via getReserves
 
     uint256 public override price0CumulativeLast;
     uint256 public override price1CumulativeLast;
@@ -65,7 +65,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1) external override {
+    function initialize(address _token0, address _token1) external virtual override {
         require(msg.sender == factory, "UniswapV2: FORBIDDEN"); // sufficient check
         token0 = _token0;
         token1 = _token1;
@@ -128,7 +128,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     // this low-level function should be called from a contract which performs important safety checks
     function mint(
         address to
-    ) external override lock returns (uint256 liquidity) {
+    ) external virtual override lock returns (uint256 liquidity) {
         (uint112 _reserve0, uint112 _reserve1, ) = getReserves(); // gas savings
         uint256 balance0 = IERC20(token0).balanceOf(address(this));
         uint256 balance1 = IERC20(token1).balanceOf(address(this));
@@ -157,7 +157,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     // this low-level function should be called from a contract which performs important safety checks
     function burn(
         address to
-    ) external override lock returns (uint256 amount0, uint256 amount1) {
+    ) external virtual override lock returns (uint256 amount0, uint256 amount1) {
         (uint112 _reserve0, uint112 _reserve1, ) = getReserves(); // gas savings
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings

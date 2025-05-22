@@ -50,6 +50,10 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         _blockTimestampLast = blockTimestampLast;
     }
 
+    function balances() virtual public view returns (uint256, uint256) {
+        return (IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)));
+    }
+
     function _safeTransfer(address token, address to, uint256 value) private {
         (bool success, bytes memory data) = token.call(
             abi.encodeWithSelector(IERC20.transfer.selector, to, value)
@@ -217,8 +221,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
                     amount1Out,
                     data
                 );
-            balance0 = IERC20(_token0).balanceOf(address(this));
-            balance1 = IERC20(_token1).balanceOf(address(this));
+            (balance0, balance1) = balances();
         }
         uint256 amount0In = balance0 > _reserve0 - amount0Out
             ? balance0 - (_reserve0 - amount0Out)
